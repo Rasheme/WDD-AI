@@ -1,0 +1,7 @@
+from PIL import Image
+
+image = Image.open("linearRegression1.jpg")
+resized_image = image.resize((400, 300))
+resized_image.save("resized_linearRegression1.jpg")
+
+print("Image resized successfully!")

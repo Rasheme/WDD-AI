@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summer CAM WDD Using AI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: silver;
+    }
+    main div {
+      border: 1px solid black;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #div9 {
+      background-color: black;
+      color: red;
+    }
+    footer {
+      padding-top: 30px;
+      padding-bottom: 20px;
+      text-align: center;
+    }
+    .banner {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="display-4">Summer CAM WDD Using AI</h1>
+    </div>
+    <main>
+      <div id="div1">
+        <h2>Section 1. What is a linear regression?</h2>
+        <ul>
+          <li>It tries to find a linear function y=wx+b.</li>
+          <li>The linear function tries to fit a collection of number pairs, such as house sales, (sqft, sale price).</li>
+          <li>There is no linear function that can accurately fit all number pairs. So, we have to find the 'best' one.</li>
+          <li>By being best, we design a so-called cost function, such as mean square error invented by the great Carl Gauss.</li>
+          <li>This is what machine learning is doing.<br><img src="linearRegression1.jpg" alt="Linear Regression Image" width="400" height="300"></li>
+        </ul>
+      </div>
+      <div id="div2">
+        <h2>Section 2. The JavaScript libraries to use</h2>
+        <p>We will use TensorFlow.js to train the model.</p>
+        <p>Click the 'Run' button below to import two JavaScript libraries.</p>
+      </div>
+      <div id="div3">
+        <p>import https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js for defining and training models.</p>
+        <p>import https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js for web browser visualization.</p>
+        <button onclick="loadLibraries()">Run</button>
+      </div>
+      <div id="div4"></div>
+      <div id="div5">
+        <h2>Section 3. Using the dataset from Google</h2>
+        <p>We will use a dataset from Google, <a href="https://storage.googleapis.com/tfjs-tutorials/carsData.json">https://storage.googleapis.com/tfjs-tutorials/carsData.json</a>.</p>
+        <button onclick="loadDataset()">Load the dataset</button>
+      </div>
+
+      <div id="div7">
+        <h2>Section 4. Extract the Miles_per_Gallon and Horsepower</h2>
+        <p>We will use only Miles_per_Gallon:value and Horsepower:value for our training.</p>
+        <button onclick="extractData()">Extract training dataset</button>
+      </div>
+      <div id="div6"></div>
+      
+      <div id="div8">
+        <h2>Section 5. Visualize the training dataset</h2>
+        <button onclick="visualizeDataset()">Visualize the training dataset</button>
+      </div>
+      <div id="div9">
+        <h2>Section 6. Define the model</h2>
+        <p>We will define a TensorFlow sequential model with one input x and one output y.</p>
+        <button onclick="defineModel()">Define the model</button>
+        <button onclick="showModelSummary()">Show summary of the model</button>
+      </div>
+      <div id="div10"></div>
+      <div id="div11">
+        <h2>Section 7. Prepare the training set</h2>
+        <p>We will prepare the extracted data.</p>
+        <ul>
+          <li>Convert the extracted data to Tensor</li>
+          <li>Shuffle the data</li>
+          <li>Normalize to the range between 0 and 1 for fast computation</li>
+        </ul>
+        <button onclick="prepareDataset()">Prepare the dataset</button>
+      </div>
+      <div id="div12">
+        <h2>Section 8. Visualize the inputs and labels for training</h2>
+        <button onclick="visualizeInputsAndLabels()">Visualize the inputs and labels</button>
+      </div>
+      <div id="div13">
+        <h2>Section 9. Train the model</h2>
+        <button onclick="trainModel()">Train the model using prepared data</button>
+      </div>
+      <div id="div14">
+        <h2>Section 10. Generate the dataset for testing</h2>
+        <button onclick="generateTestData()">Generate test data values</button>
+      </div>
+      <div id="div15">
+        <h2>Section 11. Visualize the predictions</h2>
+        <button onclick="visualizePredictions()">Visualize the predictions</button>
+      </div>
+    </main>
+    <footer>
+      <p>Copyright@2024, Albany State University Summer Camp 'Web Design and Development Using AI'</p>
+    </footer>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js"></script>
+  <script>
+    let dataset;
+    let extractedData;
+
+    function loadLibraries() {
+      const script1 = document.createElement('script');
+      script1.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js';
+      document.body.appendChild(script1);
+
+      const script2 = document.createElement('script');
+      script2.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js';
+      document.body.appendChild(script2);
+
+      const div4 = document.getElementById('div4');
+      div4.textContent = 'JavaScript libraries loaded successfully.';
+    }
+
+    function loadDataset() {
+      fetch('https://storage.googleapis.com/tfjs-tutorials/carsData.json')
+        .then(response => response.json())
+        .then(data => {
+          dataset = data;
+          const div6 = document.getElementById('div6');
+          div6.textContent = 'Dataset loaded successfully. First 10 data values: ' + JSON.stringify(data.slice(0, 10));
+        })
+        .catch(error => {
+          const div6 = document.getElementById('div6');
+          div6.textContent = 'Error loading dataset: ' + error;
+        });
+    }
+
+    function extractData() {
+      extractedData = dataset.map(item => ({
+        Miles_per_Gallon: item.Miles_per_Gallon,
+        Horsepower: item.Horsepower
+      }));
+
+      const div6 = document.getElementById('div6');
+      div6.textContent = 'Extracted dataset: ' + JSON.stringify(extractedData.slice(0, 10));
+    }
+
+    // Rest of the code...
+  </script>
+  <footer>
+    <p>Copyright@2024, Albany State University Summer Camp 'Web Design and Development Using AI'</p>
+  </footer>
+</body>
+</html>

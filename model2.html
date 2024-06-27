@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Summer CAM WDD Using AI</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: silver;
+    }
+    div[id^="div"] {
+      border-bottom: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <h1>Summer CAM WDD Using AI</h1>
+  </header>
+
+  <main>
+    <div id="div1">
+      <h2>Section 1. What is a convolutional neural network?</h2>
+      <ul>
+        <li>It tries to find an edge or pattern in an image.</li>
+        <li>It usually consists of one or more convolution plus pooling layer, and one fully connected (FC) layer.</li>
+        <li>When doing convolution on an image, we use a 5x5 filter. Further, we may apply several such filters to detect edge/pattern along several lines.</li>
+        <li>The cost function will be.</li>
+        <li>The last layer is output lay where we use a so-called Sigmoid activation, so that several outputs can be used.<br>
+          <img src="image6.jpg" alt="Convolution Example" width="600" height="300">
+        </li>
+      </ul>
+    </div>
+
+    <div id="div2">
+      <h2>Section 2. Load TensorFlow for JavaScript libraries</h2>
+      <p>We will use TensorFlow.js to train the model.</p>
+      <p>Click the 'Run' button below to import two JavaScript libraries:</p>
+      <p>import <a href="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js">https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js</a> for defining and training models.</p>
+      <p>import <a href="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js">https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js</a> for web browser visualization.</p>
+      <button onclick="loadLibraries()">Run</button>
+    </div>
+
+    <div id="div3"></div>
+
+    <div id="div4">
+      <h2>Section 3. The dataset of images</h2>
+      <p>We will use a dataset from Google: <a href="https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png">https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png</a>, and their labels: <a href="https://storage.googleapis.com/learnjs-data/model-builder/mnist_labels_uint8">https://storage.googleapis.com/learnjs-data/model-builder/mnist_labels_uint8</a>.</p>
+      <p>The dataset is a big image file. It contains 65,000 images, each of size 28 x 28 x 1. The label file contains 65,000 labels. Each image uses 10 numbers to indicate which digit the image represents.</p>
+    </div>
+
+    <div id="div5">
+      <h2>Section 4. The JavaScript module to process the dataset</h2>
+      <p>We will use a JavaScript class from './data.js' to process the dataset.</p>
+      <button onclick="loadDataset()">Load the dataset</button>
+    </div>
+
+    <div id="div7">
+      <h2>Section 5. We will show 20 images from the dataset</h2>
+      <button onclick="showImages()">Show the first 20 images</button>
+    </div>
+8ki7ju6yh54gtfr3de
+    <div id="div8">
+      <h2>Section 6. Define a CNN</h2>
+      <p>Our CNN has input of shape 28 x 28 x 1.</p>
+      <p>The first layer is a convolution + pooling. We will use 8 filters, each filter has kernel size=5 x 5 and stride=1. The activation function is 'relu'. We use max pooling of size 2 x 2 with stride=[2,2].</p>
+      <p>The second layer is also a convolution + pooling. This time, we use 16 filters each of kernel size=5x5 and stride=1. The activation function is also 'relu'. We use max pooling of size 2 x 2 with stride=[2,2].</p>
+      <p>The third layer is a fully connected layer with shape * x 1.</p>
+      <p>The last layer is the output layer, with 10 outputs representing 10 digits. The activation function is now 'softmax'.</p>
+      <button onclick="defineModel()">Define the model</button>
+    </div>
+
+    <div id="div9"></div>
+
+    <div id="div10">
+      <h2>Section 7. Train the model using 5000 images</h2>
+      <p>The batch size = 512, and epochs = 10.</p>
+      <p>The test size = 1000.</p>
+      <p>The callbacks have been added to monitor the training progress.</p>
+      <button onclick="trainModel()">Train the model</button>
+    </div>
+
+    <div id="div12">
+      <h2>Section 8. Evaluate the model</h2>
+      <p>We will obtain 500 images from the dataset mnistData.</p>
+      <p>We use the trained model to calculate the predictions and then compare the predictions with the provided labels.</p>
+      <p>We then draw a confusion matrix to show for each digit, how many images are labeled for that digit and how many images that predicted to that digit. Further, how many differences.</p>
+      <button onclick="showConfusionMatrix()">Show a confusion matrix</button>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="data.js"></script>
+  <script>
+    let model;
+
+    function loadLibraries() {
+      const script1 = document.createElement('script');
+      script1.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js';
+      document.body.appendChild(script1);
+
+      const script2 = document.createElement('script');
+      script2.src = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js';
+      document.body.appendChild(script2);
+
+      console.log('Libraries loaded!');
+      document.getElementById('div3').textContent = 'Libraries loaded!';
+    }
+
+    function loadDataset() {
+      // Code to process the dataset goes here
+      const mnistData = new MNISTData(); // Assuming MNISTData is the class from data.js
+      mnistData.load().then(() => {
+        console.log('Dataset loaded!');
+        document.getElementById('div8').textContent = `trainImages length: ${mnistData.trainImages.length}, trainLabels length: ${mnistData.trainLabels.length}`;
+      });
+    }
+
+    function showImages() {
+      // Code to show images goes here
+      console.log('Showing the first 20 images...');
+      document.getElementById('div7').textContent = 'Showing the first 20 images...';
+
+      const surfaceElement = document.getElementById('div7');
+
+      for (let i = 0; i < 20; i++) {
+        const image = mnistData.trainImages.slice([i, 0], [1, 784]);
+        const label = mnistData.trainLabels.slice([i, 0], [1, 10]);
+
+        const labelDiv = document.createElement('div');
+        labelDiv.textContent = `Label: ${label}`;
+        surfaceElement.appendChild(labelDiv);
+
+        const imgElement = document.createElement('img');
+        imgElement.src = `data:image/png;base64,${arrayBufferToBase64(image.dataSync())}`;
+        imgElement.width = 28;
+        imgElement.height = 28;
+        surfaceElement.appendChild(imgElement);
+      }
+    }
+
+    function defineModel() {
+      model = tf.sequential();
+      model.add(tf.layers.conv2d({
+        inputShape: [28, 28, 1],
+        filters: 8,
+        kernelSize: 5,
+        strides: 1,
+        activation: 'relu',
+        kernelInitializer: 'varianceScaling'
+      }));
+      model.add(tf.layers.maxPooling2d({
+        poolSize: [2, 2],
+        strides: [2, 2]
+      }));
+      model.add(tf.layers.conv2d({
+        filters: 16,
+        kernelSize: 5,
+        strides: 1,
+        activation: 'relu',
+        kernelInitializer: 'varianceScaling'
+      }));
+      model.add(tf.layers.maxPooling2d({
+        poolSize: [2, 2],
+        strides: [2, 2]
+      }));
+      model.add(tf.layers.flatten());
+      model.add(tf.layers.dense({
+        units: 10,
+        activation: 'softmax',
+        kernelInitializer: 'varianceScaling'
+      }));
+
+      model.compile({
+        optimizer: 'adam',
+        loss: 'categoricalCrossentropy',
+        metrics: ['accuracy']
+      });
+
+      console.log('Model defined!');
+      document.getElementById('div9').textContent = 'Model defined!';
+
+      tfvis.show.modelSummary({ name: 'Model Summary' }, model);
+    }
+
+    function trainModel() {
+      model.fit(trainData.xs, trainData.labels, {
+        batchSize: 512,
+        epochs: 10,
+        validationData: [testData.xs, testData.labels],
+        callbacks: tfvis.show.fitCallbacks(
+          { name: 'Model Training', tab: 'Model', styles: { height: '400px' } },
+          ['loss', 'val_loss', 'acc', 'val_acc']
+        )
+      });
+    }
+
+    function showConfusionMatrix() {
+      const testExamples = mnistData.nextTestBatch(500);
+      const testImages = testExamples.xs.reshape([500, 28, 28, 1]);
+      const testLabels = testExamples.labels.argMax(-1);
+
+      const predictions = model.predict(testImages).argMax(-1);
+
+      const classAccuracy = tfvis.metrics.perClassAccuracy(testLabels, predictions);
+      const confusionMatrix = tfvis.metrics.confusionMatrix(testLabels, predictions);
+
+      tfvis.show.perClassAccuracy({ name: 'Per Class Accuracy' }, classAccuracy);
+      tfvis.show.confusionMatrix({ name: 'Confusion Matrix' }, confusionMatrix);
+    }
+
+    function arrayBufferToBase64(buffer) {
+      let binary = '';
+      const bytes = new Uint8Array(buffer);
+      const len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+  </script>
+</body>
+</html>
